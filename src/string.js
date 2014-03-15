@@ -102,5 +102,62 @@ jspyproto.modules.strings = {
             throw "ValueError"
         }
         return idx;
+    },
+
+    isalnum: function() {
+        // True if all chars are alphanumeric and there is at least one character
+        return (/^[A-Za-z0-9]+$/).test(this);
+    },
+
+    isalpha: function() {
+        // True if all chars are alphabetic and there is at least one character
+        return (/^[A-Za-z]+$/).test(this);
+    },
+
+    isdigit: function() {
+        // True if all chars are digits and there is at least one character
+        return (/^\d+$/).test(this);
+    },
+
+    islower: function() {
+        // True if all cased chars are lowercase and there is at least one cased character
+        // *Note that == is intentional and necessary, as === will be false in this context
+        return (this.toLowerCase() == this) && (/[a-z]+/).test(this);
+    },
+
+    isspace: function() {
+        // True if all chars are whitespace and there is at least one character
+        return (/^\s+$/).test(this);
+    },
+
+    istitle: function() {
+        // True if all words are capitalized
+        // adapted from http://hg.python.org/cpython/file/63f0a1e95d2b/Objects/stringobject.c#l3509
+        var cased = false;
+        var previousIsCased = false;
+        for (var c in this) {
+            if (!this.hasOwnProperty(c)) {
+                continue;
+            }
+
+            if ((/[A-Z]/).test(this[c])) {
+                if (previousIsCased) {
+                    return false;
+                }
+                previousIsCased = true;
+                cased = 1;
+            }
+            else if ((/[a-z]/).test(this[c])) {
+                if (!previousIsCased) {
+                    return false;
+                }
+                previousIsCased = true;
+                cased = true;
+            }
+            else {
+                previousIsCased = false;
+            }
+        }
+        return cased;
     }
 };
