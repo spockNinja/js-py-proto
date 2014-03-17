@@ -76,16 +76,9 @@ jspyproto.modules.strings = {
         // Or {named1} {named2} notation with a dict ({}) can be used
         // **Not an exact translation of python's format, but we just can't do kwargs**
         var formatted = this;
-        if (Array.isArray(args)) {
-            for (var i=0; i<args.length; i++) {
-                formatted = formatted.replace(new RegExp('\\{'+i+'\\}', 'gm'), args[i]);
-            }
-        }
-        else if (typeof args === 'object') {
-            for (var k in args) {
-                if (args.hasOwnProperty(k)) {
-                    formatted = formatted.replace(new RegExp('\\{'+k+'\\}', 'gm'), args[k]);
-                }
+        for (var k in args) {
+            if (args.hasOwnProperty(k)) {
+                formatted = formatted.replace(new RegExp('\\{'+k+'\\}', 'gm'), args[k]);
             }
         }
         return formatted;
@@ -99,7 +92,7 @@ jspyproto.modules.strings = {
 
         var idx = this.slice(start, end).indexOf(sub);
         if (idx === -1) {
-            throw "ValueError"
+            throw new Error("ValueError");
         }
         return idx;
     },
@@ -122,7 +115,7 @@ jspyproto.modules.strings = {
     islower: function() {
         // True if all cased chars are lowercase and there is at least one cased character
         // *Note that == is intentional and necessary, as === will be false in this context
-        return (this.toLowerCase() == this) && (/[a-z]+/).test(this);
+        return (this.toLowerCase() == this) && (/[a-z]/).test(this);
     },
 
     isspace: function() {
@@ -159,5 +152,234 @@ jspyproto.modules.strings = {
             }
         }
         return cased;
+    },
+
+    isupper: function() {
+        // True if all cased chars are uppercase and there is at least one cased character
+        // *Note that == is intentional and necessary, as === will be false in this context
+        return (this.toUpperCase() == this) && (/[A-Z]/).test(this);
+    },
+
+    join: function(toJoin) {
+        // Joins the given iterable on 'this'
+
+        // Call toJoin's .join if it exists
+        if (typeof toJoin.join === 'function') {
+            return toJoin.join(this);
+        }
+
+        // Otherwise, do it ourselves...
+        var retString = '';
+        var delim = '';
+        for (var k in toJoin) {
+            if (toJoin.hasOwnProperty(k)) {
+                retString += (delim + k);
+                delim = this;
+            }
+        }
+        return retString;
+    },
+
+    ljust: function(width, fillchar) {
+        // Return the string left justified within a string of length = width
+        // extra space gets filled with fillchar, which defaults to space
+        fillchar = fillchar || ' ';
+        var lengthDiff = width - this.length;
+
+        if (lengthDiff <= 0) {
+            return this;
+        }
+
+        var retString = this;
+        for (var i=0; i<lengthDiff; i++) {
+            retString += fillchar;
+        }
+
+        return retString;
+    },
+
+    lower: String.prototype.toLowerCase,
+
+    lstrip: function(chars) {
+        // Returns a copy of the string with leading characters removed.
+        // chars is a string specifying the set of chars to remove, defaults to whitespace
+
+        // turn the chars into a regex
+        var reg = null;
+        if (chars) {
+            reg = new RegExp('^['+chars+']');
+        }
+        else {
+            reg = new RegExp('^\\s');
+        }
+
+        var retString = this, currLen;
+
+        do {
+            currLen = retString.length;
+            retString = retString.replace(reg, '');
+        }
+        while (retString.length !== currLen);
+
+        return retString;
+    },
+
+    partition: function(sep) {
+        // Split the string at the first occurrence of sep, and return a list of length 3
+        // containing the part before the separator, the separator itself, and the part after the separator.
+        // If the separator is not found, return a list of length 3 containing the string and two empty strings.
+
+        var idx = this.indexOf(sep);
+
+        if (idx === -1) {
+            return [this.toString(), '', ''];
+        }
+
+        return [this.slice(0, idx), sep, this.slice(idx+sep.length)];
+    },
+
+    rfind: function(sub, start, end) {
+        // Return the highest index in a string where sub is found, such that sub is between start and end
+        start = start || 0;
+        end = end || this.length;
+
+        return this.slice(start, end).lastIndexOf(sub) + start;
+    },
+
+    rindex: function(sub, start, end) {
+        // Just like rfind, except it throws an error instead of returning -1
+        var res = this.rfind(sub, start, end);
+
+        if (res === -1) {
+            throw new Error("ValueError");
+        }
+
+        return res;
+    },
+
+    rjust: function(width, fillchar) {
+        // Return the string right justified within a string of length = width
+        // extra space gets filled with fillchar, which defaults to space
+        fillchar = fillchar || ' ';
+        var lengthDiff = width - this.length;
+
+        if (lengthDiff <= 0) {
+            return this;
+        }
+
+        var retString = '';
+        for (var i=0; i<lengthDiff; i++) {
+            retString += fillchar;
+        }
+
+        retString += this;
+
+        return retString;
+    },
+
+    rpartition: function(sep) {
+        // Split the string at the last occurrence of sep, and return a list of length 3
+        // containing the part before the separator, the separator itself, and the part after the separator.
+        // If the separator is not found, return a list of length 3 containing the string and two empty strings.
+
+        var idx = this.lastIndexOf(sep);
+
+        if (idx === -1) {
+            return [this.toString(), '', ''];
+        }
+
+        return [this.slice(0, idx), sep, this.slice(idx+sep.length)];
+    },
+
+    // Not sure how I feel about rsplit just yet...
+    // split behaves differently in python than the js string split. So what should this one do?
+
+    rstrip: function(chars) {
+        // Returns a copy of the string with trailing characters removed.
+        // chars is a string specifying the set of chars to remove, defaults to whitespace
+
+        // turn the chars into a regex
+        var reg = null;
+        if (chars) {
+            reg = new RegExp('['+chars+']$');
+        }
+        else {
+            reg = new RegExp('\\s$');
+        }
+
+        var retString = this, currLen;
+
+        do {
+            currLen = retString.length;
+            retString = retString.replace(reg, '');
+        }
+        while (retString.length !== currLen);
+
+        return retString;
+    },
+
+    splitlines: function(keepends) {
+        // Returns a list of the lines, including line breaks if keepends is true
+        var newLineRegex = (/[\f\n\r]/);
+
+        // without keepnds, we can do the quick and easy split on newline chars
+        if (!keepends) {
+            return this.split(newLineRegex);
+        }
+
+        throw new Error("keepends not yet supported");
+    },
+
+    startswith: function(prefix, start, end) {
+        // check to see if prefix is at the beginning of the string,
+        // using start and end as clamps for the comparison
+        start = start || 0;
+        end = end || this.length;
+
+        var slice = this.slice(start, end);
+        return (slice.indexOf(prefix) === 0);
+    },
+
+    strip: function(chars) {
+        // Returns a copy of the string with leading and trailing characters removed.
+        // chars is a string specifying the set of chars to remove, defaults to whitespace
+
+        return this.lstrip(chars).rstrip(chars);
+    },
+
+    swapcase: function() {
+        // Return a copy of the string with uppercase characters converted to lowercase and vice versa
+
+        // Use this.replace with a function
+        // *has to be done in one pass or we'll overwrite our changes*
+        return this.replace(/([a-z]+)|([A-Z]+)/g, function(match) {
+            if (match.toLowerCase() == match) {
+                return match.toUpperCase();
+            }
+            else {
+                return match.toLowerCase();
+            }
+        });
+    },
+
+    title: function(notWordBoundaries) {
+        // Returns a titlecased version of the string where words start with an uppercase char
+        // and the remaining characters are lowercase
+        // Optional notWordBoundaries string can hold any chars that shouldn't be considered
+        // word boundaries, userful for things like apostrophes and dashes
+        notWordBoundaries = notWordBoundaries || ''
+        reg = new RegExp('\\b[A-Za-z]+(['+notWordBoundaries+'A-Za-z]*)', 'g');
+        return this.replace(reg, function(match) {
+            return match[0].toUpperCase() + match.slice(1).toLowerCase();
+        });
+    },
+
+    // Not sure how or if I want to implement translate... maybe call replace mutliple times with a dict?
+
+    upper: String.prototype.toUpperCase,
+
+    zfill: function(width) {
+        // Returns the string left filled with zeros in a string of length=width
+        return this.rjust(width, '0');
     }
 };
