@@ -16,6 +16,10 @@ jspyproto.modules.strings = {
         // centers the string in a new string of given width,
         // filling the space with fillchar (defaults to space)
         fillchar = fillchar || ' ';
+        if (fillchar.length > 1) {
+            throw "TypeError";
+        }
+
         var halfFill = (width - this.length)/2;
         var str = "", padArr = [], half = halfFill >> 0;
 
