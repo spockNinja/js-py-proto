@@ -180,7 +180,12 @@ jspyproto.modules.strings = {
         start = start || 0;
         end = end || this.length;
 
-        return this.slice(start, end).indexOf(sub) + start;
+        var res = this.slice(start, end).indexOf(sub);
+        if (res !== -1) {
+            // tack on the start, but only if we found something
+            res += start;
+        }
+        return res;
     },
 
     format: function(args) {
@@ -352,7 +357,12 @@ jspyproto.modules.strings = {
         start = start || 0;
         end = end || this.length;
 
-        return this.slice(start, end).lastIndexOf(sub) + start;
+        var res = this.slice(start, end).lastIndexOf(sub);
+        if (res !== -1) {
+            // add start, but only if we found something
+            res += start;
+        }
+        return res;
     },
 
     rindex: function(sub, start, end) {
