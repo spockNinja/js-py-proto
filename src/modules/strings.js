@@ -71,7 +71,7 @@ jspyproto.modules.strings = {
         start = start || 0;
         end = end || this.length;
 
-        return this.slice(start, end).indexOf(sub);
+        return this.slice(start, end).indexOf(sub) + start;
     },
 
     format: function(args) {
@@ -79,7 +79,7 @@ jspyproto.modules.strings = {
         // Either {0} {1} {2} notation with a list ([]) can be used
         // Or {named1} {named2} notation with a dict ({}) can be used
         // **Not an exact translation of python's format, but we just can't do kwargs**
-        var formatted = this;
+        var formatted = this.toString();
         for (var k in args) {
             if (args.hasOwnProperty(k)) {
                 formatted = formatted.replace(new RegExp('\\{'+k+'\\}', 'gm'), args[k]);
@@ -90,15 +90,13 @@ jspyproto.modules.strings = {
 
     index: function(sub, start, end) {
         // finds the index of the first occurence of a substring
-        // within the slice from start to end
-        start = start || 0;
-        end = end || this.length;
+        // within the slice from start to end, but throws an error on -1
+        var res = this.find(sub, start, end);
 
-        var idx = this.slice(start, end).indexOf(sub);
-        if (idx === -1) {
+        if (res === -1) {
             throw new Error("ValueError");
         }
-        return idx;
+        return res;
     },
 
     isalnum: function() {
@@ -118,8 +116,7 @@ jspyproto.modules.strings = {
 
     islower: function() {
         // True if all cased chars are lowercase and there is at least one cased character
-        // *Note that == is intentional and necessary, as === will be false in this context
-        return (this.toLowerCase() == this) && (/[a-z]/).test(this);
+        return (this.toLowerCase() === this.toString()) && (/[a-z]/).test(this);
     },
 
     isspace: function() {
@@ -160,8 +157,7 @@ jspyproto.modules.strings = {
 
     isupper: function() {
         // True if all cased chars are uppercase and there is at least one cased character
-        // *Note that == is intentional and necessary, as === will be false in this context
-        return (this.toUpperCase() == this) && (/[A-Z]/).test(this);
+        return (this.toUpperCase() === this.toString()) && (/[A-Z]/).test(this);
     },
 
     join: function(toJoin) {
@@ -178,7 +174,7 @@ jspyproto.modules.strings = {
         for (var k in toJoin) {
             if (toJoin.hasOwnProperty(k)) {
                 retString += (delim + k);
-                delim = this;
+                delim = this.toString();
             }
         }
         return retString;
@@ -191,10 +187,10 @@ jspyproto.modules.strings = {
         var lengthDiff = width - this.length;
 
         if (lengthDiff <= 0) {
-            return this;
+            return this.toString();
         }
 
-        var retString = this;
+        var retString = this.toString();
         for (var i=0; i<lengthDiff; i++) {
             retString += fillchar;
         }
@@ -217,7 +213,7 @@ jspyproto.modules.strings = {
             reg = new RegExp('^\\s');
         }
 
-        var retString = this, currLen;
+        var retString = this.toString(), currLen;
 
         do {
             currLen = retString.length;
@@ -268,7 +264,7 @@ jspyproto.modules.strings = {
         var lengthDiff = width - this.length;
 
         if (lengthDiff <= 0) {
-            return this;
+            return this.toString();
         }
 
         var retString = '';
@@ -276,7 +272,7 @@ jspyproto.modules.strings = {
             retString += fillchar;
         }
 
-        retString += this;
+        retString += this.toString();
 
         return retString;
     },
@@ -311,7 +307,7 @@ jspyproto.modules.strings = {
             reg = new RegExp('\\s$');
         }
 
-        var retString = this, currLen;
+        var retString = this.toString(), currLen;
 
         do {
             currLen = retString.length;
