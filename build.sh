@@ -4,9 +4,9 @@ SRC=./src
 MODULES=./src/modules/*.js
 
 # Clear the previous build
-if [ -e "$BUILD/*.js" ]
+if [ -e "$BUILD/jspyproto.js" ]
 then
-    rm "$BUILD/*.js"
+    rm $BUILD/*.js
 fi
 
 # Build the configurable version
