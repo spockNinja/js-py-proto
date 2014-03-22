@@ -122,3 +122,65 @@ test( "index", function(assert) {
         'Throws a ValueError when string is not found in a slice'
     );
 });
+
+test( "isalnum", function(assert) {
+    assert.ok('abc123'.isalnum(), 'Can verify a simple alphanumeric string');
+    assert.ok(!'abc 123'.isalnum(), 'Does not consider a space to be alphanumeric');
+    assert.ok(!'abc_123'.isalnum(), 'Does not consider an underscore to be alphanumeric');
+    assert.ok(!'a@b$c&1!2#3*'.isalnum(), 'Does not consider special characters to be alphanumeric');
+    assert.ok('a1b2c3'.isalnum(), 'Can verify a mixed alphanumeric string');
+    assert.ok(!''.isalnum(), 'Requires at least one character');
+});
+
+test( "isalpha", function(assert) {
+    assert.ok('abcdefg'.isalpha(), 'Can verify a simple alphabetic string');
+    assert.ok(!' abc '.isalpha(), 'Does not consider a space to be alphabetic');
+    assert.ok(!'_abc_'.isalpha(), 'Does not consider an underscore to be alphabetic');
+    assert.ok(!'a@b$c&D!E#D*'.isalpha(), 'Does not consider special characters to be alphabetic');
+    assert.ok('aBcDeF'.isalpha(), 'Can verify a mixed case string');
+    assert.ok(!''.isalpha(), 'Requires at least one character');
+});
+
+test( "isdigit", function(assert) {
+    assert.ok('123456'.isdigit(), 'Can verify a simple numeric string');
+    assert.ok(!' 123 '.isdigit(), 'Does not consider a space to be numeric');
+    assert.ok(!'_123_'.isdigit(), 'Does not consider an underscore to be numeric');
+    assert.ok(!'1@2$3&4!5#6*'.isdigit(), 'Does not consider special characters to be numeric');
+    assert.ok(!''.isdigit(), 'Requires at least one character');
+});
+
+test( "islower", function(assert) {
+    assert.ok('abcdefg'.islower(), 'Can verify a simple lowercase string');
+    assert.ok('spaces are fine'.islower(), 'Does not care about spaces');
+    assert.ok('1as ar3 number5'.islower(), 'Does not care about digits');
+    assert.ok('a@b$c&d!e#f*'.islower(), 'Does not care about special characters');
+    assert.ok(!'Uppers ARE NOT cool'.islower(), 'Is false when uppercase letters are present');
+    assert.ok(!''.islower(), 'Requires at least one character');
+    assert.ok(!'123!@#_ '.islower(), 'Requires at least one cased character');
+});
+
+test( "isspace", function(assert) {
+    assert.ok('   '.isspace(), 'Can verify a simple spacey string');
+    assert.ok('\t'.isspace(), 'Considers tabs');
+    assert.ok('\n'.isspace(), 'Considers newlines');
+    assert.ok(!'O+her 5tuff d*3s n0t W0rk'.isspace(), 'Is false when non spacey characters are present');
+    assert.ok(!''.isspace(), 'Requires at least one character');
+});
+
+test( "istitle", function(assert) {
+    assert.ok('Capitalized'.istitle(), 'Can verify a simple Titled string');
+    assert.ok('Multiple Capitalized'.istitle(), 'Can verify a Titled string with multiple words');
+    assert.ok(!'3 Numbers 4 Matt3r'.istitle(), 'Numbers are not considered a title string');
+    assert.ok(!'lower is certainly not titled'.istitle(), 'Can verify that lowercase words are not titled');
+    assert.ok(!''.istitle(), 'Requires at least one character');
+});
+
+test( "isupper", function(assert) {
+    assert.ok('UPPER'.isupper(), 'Can verify a simple uppercase string');
+    assert.ok('A B C D'.isupper(), 'Does not care about spaces');
+    assert.ok('A1B2C3D4'.isupper(), 'Does not care about digits');
+    assert.ok('A@B$C&D!'.isupper(), 'Does not care about special characters');
+    assert.ok(!'lower'.isupper(), 'Can verify that lowercase words are not uppercase');
+    assert.ok(!''.isupper(), 'Requires at least one character');
+    assert.ok(!'123!@#_ '.isupper(), 'Requires at least one cased character');
+});
