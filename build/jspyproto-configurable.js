@@ -126,7 +126,7 @@ jspyproto.modules.strings = {
         // filling the space with fillchar (defaults to space)
         fillchar = fillchar || ' ';
         if (fillchar.length > 1) {
-            throw "TypeError";
+            throw new TypeError("center fillchar must be a single character");
         }
 
         var halfFill = (width - this.length)/2;
@@ -297,9 +297,16 @@ jspyproto.modules.strings = {
     ljust: function(width, fillchar) {
         // Return the string left justified within a string of length = width
         // extra space gets filled with fillchar, which defaults to space
-        fillchar = fillchar || ' ';
-        var lengthDiff = width - this.length;
 
+        if (fillchar === undefined) {
+            fillchar = ' ';
+        }
+
+        if (fillchar.length !== 1) {
+            throw new TypeError("ljust fillchar must be a single character");
+        }
+
+        var lengthDiff = width - this.length;
         if (lengthDiff <= 0) {
             return this.toString();
         }
