@@ -30,7 +30,7 @@ test( "center", function(assert) {
         function() {
             centerMe.center(11, '--');
         },
-        /TypeError/,
+        TypeError,
         'Throws a TypeError when fillchars is too long'
     );
 });
@@ -183,4 +183,47 @@ test( "isupper", function(assert) {
     assert.ok(!'lower'.isupper(), 'Can verify that lowercase words are not uppercase');
     assert.ok(!''.isupper(), 'Requires at least one character');
     assert.ok(!'123!@#_ '.isupper(), 'Requires at least one cased character');
+});
+
+test( "join", function(assert) {
+    var testList = ['first', 'second', 'third'];
+    var testDict = {'one': 1, 'two': 2, 'three': 3};
+
+    assert.strictEqual(''.join(testList), 'firstsecondthird', 'Can join a simple list on an empty string');
+    assert.strictEqual(''.join(testDict), 'onetwothree', 'Can join a simple dict on an empty string');
+    assert.strictEqual(' '.join(testList), 'first second third', 'Can join a simple list on a space');
+    assert.strictEqual(' '.join(testDict), 'one two three', 'Can join a simple dict on a space');
+    assert.strictEqual('-'.join(testList), 'first-second-third', 'Can join a simple list on a hyphen');
+    assert.strictEqual('-'.join(testDict), 'one-two-three', 'Can join a simple dict on a hyphen');
+    assert.strictEqual(', '.join(testList), 'first, second, third', 'Can join a simple list on a multichar string');
+    assert.strictEqual(', '.join(testDict), 'one, two, three', 'Can join a simple dict on a multichar string');
+
+    assert.strictEqual(' '.join([]), '', 'Can handle an empty list');
+    assert.strictEqual(' '.join({}), '', 'Can handle an empty dict');
+});
+
+test( "ljust", function(assert) {
+    assert.strictEqual('justify me'.ljust(15), 'justify me     ', 'Can left justify a simple string');
+    assert.strictEqual('justify me'.ljust(15, '-'), 'justify me-----', 'Can left justify a simple string');
+    assert.strictEqual('justify me'.ljust(4), 'justify me', 'Returns the base string when width is less than base string length');
+
+    assert.strictEqual(''.ljust(3), '   ', 'Can handle an empty base string');
+    assert.strictEqual(''.ljust(3, '-'), '---', 'Can handle an empty base string with a hyphen fillchar');
+    assert.strictEqual(''.ljust(0), '', 'Can handle an empty base string with 0 width');
+
+    assert.throws(
+        function() {
+            var testy = 'justify me'.ljust(15, '--');
+        },
+        TypeError,
+        'Throws a TypeError whenever the fillchar is too long'
+    );
+
+    assert.throws(
+        function() {
+            var testy = 'justify me'.ljust(15, '');
+        },
+        TypeError,
+        'Throws a TypeError whenever the fillchar is too short'
+    );
 });
