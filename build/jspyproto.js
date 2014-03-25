@@ -327,7 +327,7 @@ jspyproto.modules.strings = {
 
         // turn the chars into a regex
         var reg = null;
-        if (chars) {
+        if (chars !== undefined) {
             reg = new RegExp('^['+chars+']');
         }
         else {
@@ -349,6 +349,9 @@ jspyproto.modules.strings = {
         // Split the string at the first occurrence of sep, and return a list of length 3
         // containing the part before the separator, the separator itself, and the part after the separator.
         // If the separator is not found, return a list of length 3 containing the string and two empty strings.
+        if (sep.length == 0) {
+            throw new Error("ValueError: empty separator given to String.partition");
+        }
 
         var idx = this.indexOf(sep);
 
