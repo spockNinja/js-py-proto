@@ -227,3 +227,41 @@ test( "ljust", function(assert) {
         'Throws a TypeError whenever the fillchar is too short'
     );
 });
+
+test( "lower", function(assert) {
+    // No need for too much here since it's using String.toLowerCase under the hood
+    assert.strictEqual('UPPERCASE'.lower(), 'uppercase', 'Uses toLowerCase');
+});
+
+test( "lstrip", function(assert) {
+    assert.strictEqual('   start here'.lstrip(), 'start here', 'Can remove spaces from the beginning of a simple string');
+    assert.strictEqual('\n\tstart here'.lstrip(), 'start here', 'Can remove tabs and newlines from the beginning of a simple string');
+    assert.strictEqual('   start here  '.lstrip(), 'start here  ', 'Does not remove spaces from the end of a simple string');
+    assert.strictEqual('\n\tstart here\n\t'.lstrip(), 'start here\n\t', 'Does not remove tabs and newlines from the end of a simple string');
+    assert.strictEqual('\n\tstart\n\there'.lstrip(), 'start\n\there', 'Does not remove tabs and newlines from the middle of a simple string');
+
+    assert.strictEqual('abcstart here'.lstrip('abc'), 'start here', 'Can remove a given character set from the beginning of a simple string');
+    assert.strictEqual('bcastart here'.lstrip('abc'), 'start here', 'Can remove a given character set in any order from the beginning of a simple string');
+    assert.strictEqual('abcstart hereabc'.lstrip('abc'), 'start hereabc', 'Does not remove a given character set from the end of a simple string');
+    assert.strictEqual('abcstartabchere'.lstrip('abc'), 'startabchere', 'Does not remove a given character set from the middle of a simple string');
+
+    assert.strictEqual(''.lstrip(), '', 'Can handle an empty base string.');
+    assert.strictEqual('  abc'.lstrip(''), '  abc', 'Can handle an empty character set.');
+});
+
+test( "partition", function(assert) {
+    assert.deepEqual('first,second'.partition(','), ['first', ',', 'second'], 'Can partition a simple string on a simple separator');
+    assert.deepEqual('first---second'.partition('---'), ['first', '---', 'second'], 'Can partition a simple string on a multichar separator');
+    assert.deepEqual('first,second,third'.partition(','), ['first', ',', 'second,third'], 'Can partition a simple string with multiple instances of separator');
+    assert.deepEqual('first.second'.partition(','), ['first.second', '', ''], 'Returns correct result when separator is not found');
+
+    assert.deepEqual(''.partition(','), ['', '', ''], 'Can handle an empty base string');
+
+    assert.throws(
+        function() {
+            var testy = 'first,second'.partition('');
+        },
+        /ValueError: empty separator/,
+        "Throws a ValueError when the separator is empty"
+    );
+});
