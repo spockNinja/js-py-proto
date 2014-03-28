@@ -265,3 +265,105 @@ test( "partition", function(assert) {
         "Throws a ValueError when the separator is empty"
     );
 });
+
+test( "rfind", function(assert) {
+    var findThis = "find something in this string";
+    assert.strictEqual(findThis.rfind('ing'), 26, 'Can correctly identify the rightmost index of a substring that is at the very end of the string');
+    assert.strictEqual(findThis.rfind('in'), 26, 'Can correctly identify the rightmost index of a substring that is not at the end of the string');
+    assert.strictEqual(findThis.rfind('in', 0, 24), 15, 'Can correctly identify the rightmost index of a substring that is not at the end of the string');
+    assert.strictEqual(findThis.rfind('in', 4, 24), 15, 'Can correctly identify the rightmost index of a substring when not starting at 0');
+
+    assert.strictEqual(findThis.rfind('what'), -1, 'Can correctly identify that a substring is not present in the base string');
+    assert.strictEqual(findThis.rfind('ring', 0, 27), -1, 'Can correctly identify that a substring is not present in a slice of the base string');
+    assert.strictEqual(findThis.rfind('ring', 5, 27), -1, 'Can correctly identify that a substring is not present when not starting at 0');
+
+    assert.strictEqual(findThis.rfind(''), 29, 'Behaves as python rfind does where empty strings are located at the end of the string');
+    assert.strictEqual(''.rfind('something'), -1, 'Can handle empty base strings');
+});
+
+test( "rindex", function(assert) {
+    // it uses rfind under the hood, so we just need to test the -1 case
+    assert.throws(
+        function() {
+            var testy = 'not in here'.rindex('wat');
+        },
+        /ValueError/,
+        "Throws an error when the string is not found"
+    );
+
+    assert.throws(
+        function() {
+            var testy = 'not in here'.rindex('wat', 2, 7);
+        },
+        /ValueError/,
+        "Throws an error when the string is not found in a slice of the base string"
+    );
+});
+
+test( "rjust", function(assert) {
+    var justifyThis = "JUSTICE";
+    assert.strictEqual(justifyThis.rjust(10), '   JUSTICE', 'Can right justify a simple string');
+    assert.strictEqual(justifyThis.rjust(10, '-'), '---JUSTICE', 'Can right justify a simple string with specified fillchar');
+    assert.strictEqual(justifyThis.rjust(4), justifyThis, 'Returns the base string when width is less than base string length');
+
+    assert.strictEqual(''.rjust(3), '   ', 'Can handle an empty base string');
+    assert.strictEqual(''.rjust(3, '-'), '---', 'Can handle an empty base string with a hyphen fillchar');
+    assert.strictEqual(''.rjust(0), '', 'Can handle an empty base string with 0 width');
+
+    assert.throws(
+        function() {
+            var testy = 'JUSTICE'.rjust(15, '--');
+        },
+        TypeError,
+        'Throws a TypeError whenever the fillchar is too long'
+    );
+
+    assert.throws(
+        function() {
+            var testy = 'JUSTICE'.rjust(15, '');
+        },
+        TypeError,
+        'Throws a TypeError whenever the fillchar is too short'
+    );
+});
+
+test( "rpartition", function(assert) {
+    assert.deepEqual('first,second'.rpartition(','), ['first', ',', 'second'], 'Can partition a simple string on a simple separator');
+    assert.deepEqual('first---second'.rpartition('---'), ['first', '---', 'second'], 'Can partition a simple string on a multichar separator');
+    assert.deepEqual('first,second,third'.rpartition(','), ['first,second', ',', 'third'], 'Can partition a simple string with multiple instances of separator');
+    assert.deepEqual('first.second'.rpartition(','), ['first.second', '', ''], 'Returns correct result when separator is not found');
+
+    assert.deepEqual(''.rpartition(','), ['', '', ''], 'Can handle an empty base string');
+
+    assert.throws(
+        function() {
+            var testy = 'first,second'.rpartition('');
+        },
+        /ValueError: empty separator/,
+        "Throws a ValueError when the separator is empty"
+    );
+});
+
+test( "rstrip", function(assert) {
+    assert.strictEqual('clean up    '.rstrip(), 'clean up', 'Can remove spaces from the end of a simple string');
+    assert.strictEqual('clean up\n\t'.rstrip(), 'clean up', 'Can remove tabs and newlines from the end of a simple string');
+    assert.strictEqual('   clean up   '.rstrip(), '   clean up', 'Does not remove spaces from the beginning of a simple string');
+    assert.strictEqual('\n\tclean up\n\t'.rstrip(), '\n\tclean up', 'Does not remove tabs and newlines from the beginning of a simple string');
+    assert.strictEqual('clean\n\tup\n\t'.rstrip(), 'clean\n\tup', 'Does not remove tabs and newlines from the middle of a simple string');
+
+    assert.strictEqual('clean upabc'.rstrip('abc'), 'clean up', 'Can remove a given character set from the end of a simple string');
+    assert.strictEqual('clean upbca'.rstrip('abc'), 'clean up', 'Can remove a given character set in any order from the end of a simple string');
+    assert.strictEqual('abcclean upabc'.rstrip('abc'), 'abcclean up', 'Does not remove a given character set from the beginning of a simple string');
+    assert.strictEqual('cleanabcupabc'.rstrip('abc'), 'cleanabcup', 'Does not remove a given character set from the middle of a simple string');
+
+    assert.strictEqual(''.rstrip(), '', 'Can handle an empty base string.');
+    assert.strictEqual('abc   '.lstrip(''), 'abc   ', 'Can handle an empty character set.');
+});
+
+test( "splitlines", function(assert) {
+    assert.deepEqual('two\nlines'.splitlines(), ['two', 'lines'], 'Can split on a simple newline character');
+    assert.deepEqual('two\nlines'.splitlines(true), ['two\n', 'lines'], 'Can keep the newlines intact');
+    assert.deepEqual('two\nlines\n'.splitlines(true), ['two\n', 'lines\n'], 'Can keep the newlines intact even when ending on a newline');
+    assert.deepEqual('one line'.splitlines(), ['one line'], 'Can handle strings with no newlines characters');
+    assert.deepEqual(''.splitlines(), [], 'Can handle empty strings');
+});
