@@ -349,7 +349,7 @@ jspyproto.modules.strings = {
         // Split the string at the first occurrence of sep, and return a list of length 3
         // containing the part before the separator, the separator itself, and the part after the separator.
         // If the separator is not found, return a list of length 3 containing the string and two empty strings.
-        if (sep.length == 0) {
+        if (sep.length === 0) {
             throw new Error("ValueError: empty separator given to String.partition");
         }
 
@@ -389,9 +389,14 @@ jspyproto.modules.strings = {
     rjust: function(width, fillchar) {
         // Return the string right justified within a string of length = width
         // extra space gets filled with fillchar, which defaults to space
-        fillchar = fillchar || ' ';
-        var lengthDiff = width - this.length;
+        if (fillchar === undefined) {
+            fillchar = ' ';
+        }
+        if (fillchar.length !== 1) {
+            throw new TypeError("rjust fillchar must be a single character");
+        }
 
+        var lengthDiff = width - this.length;
         if (lengthDiff <= 0) {
             return this.toString();
         }
@@ -410,6 +415,9 @@ jspyproto.modules.strings = {
         // Split the string at the last occurrence of sep, and return a list of length 3
         // containing the part before the separator, the separator itself, and the part after the separator.
         // If the separator is not found, return a list of length 3 containing the string and two empty strings.
+        if (sep.length === 0) {
+            throw new Error("ValueError: empty separator given to String.partition");
+        }
 
         var idx = this.lastIndexOf(sep);
 
@@ -449,14 +457,35 @@ jspyproto.modules.strings = {
 
     splitlines: function(keepends) {
         // Returns a list of the lines, including line breaks if keepends is true
-        var newLineRegex = (/[\f\n\r]/);
 
+        var retArray = [];
         // without keepnds, we can do the quick and easy split on newline chars
         if (!keepends) {
-            return this.split(newLineRegex);
+            var newLineRegex = (/[\f\n\r]/);
+            retArray = this.split(newLineRegex);
+        }
+        else {
+            // use the capturing functionality of split to keep the newlines
+            // we just have to create a new array with every two items concatenated
+            var newLineRegex = (/([\f\n\r])/);
+            var keptArray = this.split(newLineRegex);
+
+            for (var i=0; i<keptArray.length; i+=2) {
+                if ((i + 1) < keptArray.length) {
+                    retArray.push(keptArray[i] + keptArray[i+1]);
+                }
+                else {
+                    retArray.push(keptArray[i]);
+                }
+            }
         }
 
-        throw new Error("keepends not yet supported");
+        // to act like python's version, we need to take off trailing empty strings
+        if (retArray.slice(-1)[0] === "") {
+            retArray.pop();
+        }
+
+        return retArray;
     },
 
     startswith: function(prefix, start, end) {
