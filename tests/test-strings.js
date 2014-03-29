@@ -367,3 +367,57 @@ test( "splitlines", function(assert) {
     assert.deepEqual('one line'.splitlines(), ['one line'], 'Can handle strings with no newlines characters');
     assert.deepEqual(''.splitlines(), [], 'Can handle empty strings');
 });
+
+test( "startswith", function(assert) {
+    var testStart = 'startswith';
+
+    assert.strictEqual(testStart.startswith('start'), true, 'Can see a simple case of starting with');
+    assert.strictEqual(testStart.startswith('startswith'), true, 'Can see a case of starting with when the entire string matches');
+    assert.strictEqual(testStart.startswith('what'), false, 'Can see a simple case of not starting with');
+    assert.strictEqual('startswithstars'.startswith('star'), true, 'Can see a case of starting with while the subtring is also present elsewhere');
+
+    assert.strictEqual(testStart.startswith('art', 2), true, 'Can see a simple case of starting with on a sliced string');
+    assert.strictEqual(testStart.startswith('start', 2), false, 'Can see a simple case of not starting with on a sliced string');
+    assert.strictEqual(testStart.startswith('arts', 2, 6), true, 'Can see a case of starting with on a sliced string that matches the entire string');
+});
+
+test( "strip", function(assert) {
+    // uses rstrip and lstrip internally, so just check that both work together
+    assert.strictEqual('   abc   '.strip(), 'abc', 'Can remove spaces from the start and end of a string');
+    assert.strictEqual('\n\tabc\n\t'.strip(), 'abc', 'Can remove tabs and newlines from the start and end of a string');
+    assert.strictEqual('  a b c  '.strip(), 'a b c', 'Does not remove spaces from the middle of the string');
+    assert.strictEqual('\n\ta\nb\tc\n\t'.strip(), 'a\nb\tc', 'Does not remove tabs and newlines from the middle of the string');
+
+    assert.strictEqual('123clean up123'.strip('123'), 'clean up', 'Can remove a given character set from the start and end of a simple string');
+    assert.strictEqual('312clean up213'.strip('123'), 'clean up', 'Can remove a given character set in any order from the start and end of a simple string');
+    assert.strictEqual('321clean312up231'.strip('123'), 'clean312up', 'Does not remove a given character set from the middle of a simple string');
+
+    assert.strictEqual(''.strip(), '', 'Can handle an empty base string.');
+    assert.strictEqual('   abc   '.lstrip(''), '   abc   ', 'Can handle an empty character set.');
+});
+
+test( "swapcase", function(assert) {
+    assert.strictEqual('abcd'.swapcase(), 'ABCD', 'Can swap the case of a simple lowercase string');
+    assert.strictEqual('ABCD'.swapcase(), 'abcd', 'Can swap the case of a simple uppercase string');
+    assert.strictEqual('AbcD'.swapcase(), 'aBCd', 'Can swap the case of a simple mixed-case string');
+
+    assert.strictEqual('A complicated $tr1nG'.swapcase(), 'a COMPLICATED $TR1Ng', 'Can swap the case of a complicated string');
+    assert.strictEqual('123 !@# )(*'.swapcase(), '123 !@# )(*', 'Does not change a string with no cased characters');
+    assert.strictEqual(''.swapcase(), '', 'Can handle an empty string');
+});
+
+test( "title", function(assert) {
+    assert.strictEqual('a simple titleable string'.title(), 'A Simple Titleable String', 'Can titlecase a simple lowercase string');
+    assert.strictEqual('A SIMPLE TITLEABLE STRING'.title(), 'A Simple Titleable String', 'Can titlecase a simple uppercase string');
+    assert.strictEqual('a String with some Titled words'.title(), 'A String With Some Titled Words', 'Can titlecase a string that alread contains title words');
+
+    assert.strictEqual("a string's titling isn't always easy".title("'"), "A String's Titling Isn't Always Easy", 'Can titlecase a string correctly when given an apostrophe as not a word boundary');
+    assert.strictEqual("a hyphen-ated string should-work".title("-"), "A Hyphen-ated String Should-work", 'Can titlecase a string correctly when given a hyphen as not a word boundary');
+    assert.strictEqual('a normal string'.title(''), 'A Normal String', 'Can handle the empty string passed for notWordBoundaries');
+    assert.strictEqual(''.title(), '', 'Can handle the empty string');
+});
+
+test( "zfill", function(assert) {
+    // uses rjust internally, so just test that '0's are used
+    assert.strictEqual('1234'.zfill(10), '0000001234', 'Can fill correctly with 0s');
+});
