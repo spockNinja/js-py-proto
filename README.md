@@ -10,8 +10,6 @@ In particular, I have written a few functions here and there that I come to expe
 So, I decided to make a project where I can take that idea to the next level and aim to implement as many python built-ins in Javascript as I can.
 
 ### Using in Your Project
-You can use the standard jspyproto.js file, which will automatically patch all of the modules that have been implemented.
-OR, you can use the jspyproto-configurable.js file, which allows you to exclude certain functions and call ```jspyproto.start()``` on your own terms.
 
 #### In the HTML...
 ```html
@@ -33,14 +31,28 @@ OR, you can use the jspyproto-configurable.js file, which allows you to exclude 
     pyString.count('python'); // 1
     // And many more...
 ```
+
+#### In nodejs...
+`npm install js-py-proto`
+```javascript
+    require('js-py-proto')();
+    var pyString = "i am a javascript string... with python functions";
+    pyString.capitalize(); // "I am a javascript string... with python functions"
+    pyString.count('python'); // 1
+    // And many more...
+```
+
 #### Strings
 String functions that have been implemented can be found here: http://docs.python.org/2/library/stdtypes.html#string-methods
 
 ****
 ### Contributing
-#### Build Dependencies
-* The build script is a bash script. So, yeah. It's simple and straightforward.
-* [uglifyjs](https://github.com/mishoo/UglifyJS2) is used to compile the minified versions.
-
-#### Running Tests
-After running the build, simply open up the tests/test.html page in a browser.
+1. Create your Fork
+2. Install [nodejs](http://nodejs.org/) and [npm](https://www.npmjs.org/)
+3. `npm install -g grunt-cli`
+4. `cd` into your fork and `npm install` to get the dependencies
+5. Make your changes.
+6. Add/Fix tests.
+7. Run `grunt` in the project directory.
+8. Fix any issues from failing tests or jshint warnings.
+9. Commit and open up a PR!
