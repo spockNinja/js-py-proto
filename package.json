@@ -1,0 +1,46 @@
+{
+  "name": "js-py-proto",
+  "version": "0.1.0",
+  "description": "Use your favorite Python builtins in Javascript.",
+  "author": {
+    "name": "Jacob Foster",
+    "email": "jacobef10@gmail.com",
+    "url": "http://github.com/spockNinja"
+  },
+  "keywords": [
+    "python",
+    "prototype",
+    "builtin",
+    "builtins",
+    "String",
+    "Object"
+  ],
+  "main": "build/js-py-proto.js",
+  "engine": {
+    "node": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spockNinja/js-py-proto"
+  },
+  "bugs": {
+    "url": "https://github.com/spockNinja/js-py-proto/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ],
+  "devDependencies": {
+    "grunt": "~0.4.4",
+    "grunt-contrib-jshint": "~0.9.2",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-nodeunit": "~0.3.3",
+    "grunt-contrib-uglify": "^0.4.0"
+  },
+  "scripts": {
+    "test": "grunt"
+  },
+  "_id": "js-py-proto@0.1.0",
+  "_from": "js-py-proto"
+}

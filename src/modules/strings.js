@@ -349,16 +349,16 @@ jspyproto.modules.strings = {
     splitlines: function(keepends) {
         // Returns a list of the lines, including line breaks if keepends is true
 
-        var retArray = [];
+        var retArray = [], newLineRegex = null;
         // without keepnds, we can do the quick and easy split on newline chars
         if (!keepends) {
-            var newLineRegex = (/[\f\n\r]/);
+            newLineRegex = (/[\f\n\r]/);
             retArray = this.split(newLineRegex);
         }
         else {
             // use the capturing functionality of split to keep the newlines
             // we just have to create a new array with every two items concatenated
-            var newLineRegex = (/([\f\n\r])/);
+            newLineRegex = (/([\f\n\r])/);
             var keptArray = this.split(newLineRegex);
 
             for (var i=0; i<keptArray.length; i+=2) {
@@ -402,7 +402,7 @@ jspyproto.modules.strings = {
         // Use this.replace with a function
         // *has to be done in one pass or we'll overwrite our changes*
         return this.replace(/([a-z]+)|([A-Z]+)/g, function(match) {
-            if (match.toLowerCase() == match) {
+            if (match.toLowerCase() === match) {
                 return match.toUpperCase();
             }
             else {
@@ -416,7 +416,7 @@ jspyproto.modules.strings = {
         // and the remaining characters are lowercase
         // Optional notWordBoundaries string can hold any chars that shouldn't be considered
         // word boundaries, userful for things like apostrophes and dashes
-        notWordBoundaries = notWordBoundaries || ''
+        notWordBoundaries = notWordBoundaries || '';
         reg = new RegExp('\\b[A-Za-z]+(['+notWordBoundaries+'A-Za-z]*)', 'g');
         return this.replace(reg, function(match) {
             return match[0].toUpperCase() + match.slice(1).toLowerCase();

@@ -1,0 +1,5 @@
+# log files...
+*.log
+
+# No need to include node modules
+node_modules/

@@ -1,112 +1,11 @@
 /*
- * This file contains all of the configuration and Browser support logic.
+ * Just defining the base jspyproto object
+ * (to be included before the modules)
  */
+var jspyproto = {
+    modules: {}
+};
 
-jspyproto = {
-
-    modules: {},
-
-    options: {
-        exclude: {
-            strings: [],
-            objects: [],
-            numbers: []
-        }
-    },
-
-    browserSupport: {
-        defineProperty: true,
-    },
-
-    // Apply preferences
-    configure: function(userOptions) {
-        if (typeof userOptions !== "object") {
-            throw "Configure options must be an object.";
-        }
-
-        // Parse the exlusion settings
-        if (userOptions.exclude !== undefined) {
-            if (typeof userOptions.exclude !== "object") {
-                throw "Exclude options must be an object.";
-            }
-            for (var k in userOptions.exclude) {
-                if (this.options.exclude.hasOwnProperty(k)) {
-                    if (typeof userOptions.exclude[k] === "boolean") {
-                        this.options.exclude[k] = userOptions.exclude[k];
-                    }
-                    else if (Array.isArray(userOptions.exclude[k])) {
-                        var moduleExclusions = [];
-                        for (var i=0; i<userOptions.exclude[k].length; i++) {
-                            if (this.modules[k].hasOwnProperty(userOptions.exclude[k][i])) {
-                                moduleExclusions.push(userOptions.exclude[k][i]);
-                            }
-                            else {
-                                throw userOptions[k][i] + " is not a valid method of the " + k + " module.";
-                            }
-                        }
-                        if (moduleExclusions.length > 0) {
-                            this.options.exclude[k] = moduleExclusions;
-                        }
-                    }
-                    else {
-                        throw "Exclusion paramaters must be a boolean or list.";
-                    }
-                }
-                else if (userOptions.exclude.hasOwnProperty(k)) {
-                    throw k + " is not a valid module to exclude.";
-                }
-            }
-        }
-    },
-
-    // Check to see what the browser can do...
-    checkBrowserSupport: function() {
-        if (Object.defineObject === undefined || (/MSIE 8.0/).test(navigator.userAgent)) {
-            this.browserSupport.defineProperty = false;
-        }
-    },
-
-    // Actually apply the functions to the correct prototypes
-    start: function() {
-        this.checkBrowserSupport();
-
-        for (var m in this.modules) {
-            if (!this.modules.hasOwnProperty(m) ||
-                 this.options.exclude[m] === true) {
-                continue;
-            }
-
-            var objToPatch = null;
-            switch (m) {
-                case 'strings':
-                    objToPatch = String.prototype;
-                    break;
-                case 'objects':
-                    objToPatch = Object.prototype;
-                    break;
-                default:
-                    throw "Module not yet implemented: " + m;
-            }
-
-            for (var f in this.modules[m]) {
-                if (!this.modules[m].hasOwnProperty(f) ||
-                     this.options.exclude[m].indexOf(f) !== -1) {
-                    continue;
-                }
-
-                if (this.browserSupport.defineProperty) {
-                    Object.defineProperty(objToPatch, f, this.modules[m][f]);
-                }
-                else {
-                    objToPatch[f] = this.modules[m][f];
-                }
-            }
-        }
-
-        // clean ourselves up to keep the global namespace clean
-        delete jspyproto;
-    }
-}
 /*
  * This file contains the source for all of the String prototyped functions.
  *
@@ -458,16 +357,16 @@ jspyproto.modules.strings = {
     splitlines: function(keepends) {
         // Returns a list of the lines, including line breaks if keepends is true
 
-        var retArray = [];
+        var retArray = [], newLineRegex = null;
         // without keepnds, we can do the quick and easy split on newline chars
         if (!keepends) {
-            var newLineRegex = (/[\f\n\r]/);
+            newLineRegex = (/[\f\n\r]/);
             retArray = this.split(newLineRegex);
         }
         else {
             // use the capturing functionality of split to keep the newlines
             // we just have to create a new array with every two items concatenated
-            var newLineRegex = (/([\f\n\r])/);
+            newLineRegex = (/([\f\n\r])/);
             var keptArray = this.split(newLineRegex);
 
             for (var i=0; i<keptArray.length; i+=2) {
@@ -511,7 +410,7 @@ jspyproto.modules.strings = {
         // Use this.replace with a function
         // *has to be done in one pass or we'll overwrite our changes*
         return this.replace(/([a-z]+)|([A-Z]+)/g, function(match) {
-            if (match.toLowerCase() == match) {
+            if (match.toLowerCase() === match) {
                 return match.toUpperCase();
             }
             else {
@@ -525,7 +424,7 @@ jspyproto.modules.strings = {
         // and the remaining characters are lowercase
         // Optional notWordBoundaries string can hold any chars that shouldn't be considered
         // word boundaries, userful for things like apostrophes and dashes
-        notWordBoundaries = notWordBoundaries || ''
+        notWordBoundaries = notWordBoundaries || '';
         reg = new RegExp('\\b[A-Za-z]+(['+notWordBoundaries+'A-Za-z]*)', 'g');
         return this.replace(reg, function(match) {
             return match[0].toUpperCase() + match.slice(1).toLowerCase();
@@ -541,9 +440,72 @@ jspyproto.modules.strings = {
         return this.rjust(width, '0');
     }
 };
+
 /*
- *  This file starts jspyproto without any configuration.
- *  It is handy for those who do not wish to exclude any jspyproto functions.
+ * This file contains the platform support logic and the code
+ * that actually patches the native prototypes with the module functions
  */
 
-jspyproto.start();
+(function() {
+
+    // check platform and feature support
+    var node = false;
+    var browser = false;
+    var defineProperty = false;
+
+    if (typeof module !== 'undefined' && module.exports) {
+        node = true;
+        if (typeof Object.defineProperty === 'function') {
+            defineProperty = true;
+        }
+    }
+    else {
+        browser = true;
+        if (typeof Object.defineProperty === 'function' && !(/MSIE 8.0/).test(navigator.userAgent)) {
+            defineProperty = true;
+        }
+    }
+    
+
+    var start = function() {
+        // Actually apply the functions to the correct prototypes
+        for (var m in jspyproto.modules) {
+            if (jspyproto.modules.hasOwnProperty(m)) {
+                var objToPatch = null;
+                switch (m) {
+                    case 'strings':
+                        objToPatch = String.prototype;
+                        break;
+                    case 'objects':
+                        objToPatch = Object.prototype;
+                        break;
+                    default:
+                        throw new Error("Module not yet implemented: " + m);
+                }
+
+                for (var f in jspyproto.modules[m]) {
+                    if (jspyproto.modules[m].hasOwnProperty(f)) {
+                        if (defineProperty) {
+                            Object.defineProperty(objToPatch, f, {value: jspyproto.modules[m][f]});
+                        }
+                        else {
+                            objToPatch[f] = jspyproto.modules[m][f];
+                        }
+                    }
+                }
+            }
+        }
+
+        // clean ourselves up to keep the global namespace clean
+        /* jshint ignore:start */
+        delete jspyproto;
+        /* jshint ignore:end */
+    };
+
+    if (browser) {
+        start();
+    }
+    else if (node) {
+        module.exports = start;
+    }
+}).call(this);
