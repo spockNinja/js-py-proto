@@ -9,6 +9,8 @@ In particular, I have written a few functions here and there that I come to expe
 
 So, I decided to make a project where I can take that idea to the next level and aim to implement as many python built-ins in Javascript as I can.
 
+Travis Build Status: [![Build Status](https://travis-ci.org/spockNinja/js-py-proto.svg?branch=master)](https://travis-ci.org/spockNinja/js-py-proto)
+
 ### Using in Your Project
 
 #### In the HTML...
