@@ -54,4 +54,9 @@ module.exports = function(grunt) {
         'nodeunit',
         'uglify'
     ]);
+
+    grunt.registerTask('test', [
+        'jshint',
+        'nodeunit'
+    ]);
 };
