@@ -47,6 +47,14 @@ Travis Build Status: [![Build Status](https://travis-ci.org/spockNinja/js-py-pro
 #### Strings
 String functions that have been implemented can be found here: http://docs.python.org/2/library/stdtypes.html#string-methods
 
+#### Objects/Dicts
+Object/Dict functions that have been implemented can be found here: https://docs.python.org/2/library/stdtypes.html#mapping-types-dict
+*Notes*
+* `get` was aliased to `getValue` because `get` breaks some standard javascript Object features
+* `update` currently only takes another Object/Dict and does not accept an array of (key, val) pairs
+* `iter*` and `view*` functions have not yet been implemented because there is no euqivalent in javascript yet
+* Once Javascript 1.7 is widely supported, `iter*` functions will be useful and are on my radar
+
 ****
 ### Contributing
 1. Create your Fork
