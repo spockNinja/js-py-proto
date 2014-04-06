@@ -49,6 +49,7 @@ String functions that have been implemented can be found here: http://docs.pytho
 
 #### Objects/Dicts
 Object/Dict functions that have been implemented can be found here: https://docs.python.org/2/library/stdtypes.html#mapping-types-dict
+
 *Notes*
 * `get` was aliased to `getValue` because `get` breaks some standard javascript Object features
 * `update` currently only takes another Object/Dict and does not accept an array of (key, val) pairs
