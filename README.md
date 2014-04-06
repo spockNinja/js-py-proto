@@ -20,7 +20,7 @@ Travis Build Status: [![Build Status](https://travis-ci.org/spockNinja/js-py-pro
 
     <!-- Include BEFORE your own js so the functions will be there when you want them. -->
     <script type="text/javascript" src="jspyproto.js"></script>
-    <!-- If you are going to use the configurable version, put your configuration code immediately following. -->
+    <!-- Your scripts here... -->
 </html>
 ```
 
