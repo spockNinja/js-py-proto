@@ -3,9 +3,10 @@
  */
 
 require('../build/js-py-proto')();
-exports.string = {
 
-    capitalize: function(test) {
+exports.stringTests = {
+
+    testCapitalize: function(test) {
         test.strictEqual('capitalize me'.capitalize(), 'Capitalize me', 'Can capitalize correctly');
         test.strictEqual('Already capitalized'.capitalize(), 'Already capitalized', 'Does not change capitalized strings');
         test.strictEqual(''.capitalize(), '', 'Handles empty strings');
@@ -13,7 +14,7 @@ exports.string = {
         test.done();
     },
 
-    center: function(test) {
+    testCenter: function(test) {
         var centerMe = 'center me';
     
         test.strictEqual(centerMe.center(11), ' center me ', 'Can center even diffs');
@@ -39,7 +40,7 @@ exports.string = {
         test.done();
     },
     
-    count: function(test) {
+    testCount: function(test) {
         test.strictEqual('sub'.count('sub'), 1, 'Can count one simple occurence');
         test.strictEqual('sub##'.count('sub'), 1, 'Can count one occurence at the beginning of the string');
         test.strictEqual('#sub#'.count('sub'), 1, 'Can count one occurence in the middle of the string');
@@ -62,7 +63,7 @@ exports.string = {
         test.done();
     },
     
-    endswith: function(test) {
+    testEndswith: function(test) {
         var testEnds = 'endswith';
     
         test.strictEqual(testEnds.endswith('with'), true, 'Can see a simple case of ending with');
@@ -76,7 +77,7 @@ exports.string = {
         test.done();
     },
     
-    find: function(test) {
+    testFind: function(test) {
         var testFind = 'finding';
     
         test.strictEqual(testFind.find('find'), 0, 'Can find a simple string at the start of the subject string');
@@ -89,7 +90,7 @@ exports.string = {
         test.done();
     },
     
-    format: function(test) {
+    testFormat: function(test) {
         var testFormatDict = '{first}, {{second}} + {1}';
         var testFormatList = '{0}, {{1}} + {a}';
         var testUndefined = '{undefined}';
@@ -111,7 +112,7 @@ exports.string = {
         test.done();
     },
     
-    index: function(test) {
+    testIndex: function(test) {
         // Don't need to test too much, as it uses find
         // Just test that -1 throws ValueError
         var testIndex = 'indices';
@@ -132,7 +133,7 @@ exports.string = {
         test.done();
     },
     
-    isalnum: function(test) {
+    testIsalnum: function(test) {
         test.ok('abc123'.isalnum(), 'Can verify a simple alphanumeric string');
         test.ok(!'abc 123'.isalnum(), 'Does not consider a space to be alphanumeric');
         test.ok(!'abc_123'.isalnum(), 'Does not consider an underscore to be alphanumeric');
@@ -142,7 +143,7 @@ exports.string = {
         test.done();
     },
     
-    isalpha: function(test) {
+    testIsalpha: function(test) {
         test.ok('abcdefg'.isalpha(), 'Can verify a simple alphabetic string');
         test.ok(!' abc '.isalpha(), 'Does not consider a space to be alphabetic');
         test.ok(!'_abc_'.isalpha(), 'Does not consider an underscore to be alphabetic');
@@ -152,7 +153,7 @@ exports.string = {
         test.done();
     },
     
-    isdigit: function(test) {
+    testIsdigit: function(test) {
         test.ok('123456'.isdigit(), 'Can verify a simple numeric string');
         test.ok(!' 123 '.isdigit(), 'Does not consider a space to be numeric');
         test.ok(!'_123_'.isdigit(), 'Does not consider an underscore to be numeric');
@@ -161,7 +162,7 @@ exports.string = {
         test.done();
     },
     
-    islower: function(test) {
+    testIslower: function(test) {
         test.ok('abcdefg'.islower(), 'Can verify a simple lowercase string');
         test.ok('spaces are fine'.islower(), 'Does not care about spaces');
         test.ok('1as ar3 number5'.islower(), 'Does not care about digits');
@@ -172,7 +173,7 @@ exports.string = {
         test.done();
     },
     
-    isspace: function(test) {
+    testIsspace: function(test) {
         test.ok('   '.isspace(), 'Can verify a simple spacey string');
         test.ok('\t'.isspace(), 'Considers tabs');
         test.ok('\n'.isspace(), 'Considers newlines');
@@ -181,7 +182,7 @@ exports.string = {
         test.done();
     },
     
-    istitle: function(test) {
+    testIstitle: function(test) {
         test.ok('Capitalized'.istitle(), 'Can verify a simple Titled string');
         test.ok('Multiple Capitalized'.istitle(), 'Can verify a Titled string with multiple words');
         test.ok(!'3 Numbers 4 Matt3r'.istitle(), 'Numbers are not considered a title string');
@@ -190,7 +191,7 @@ exports.string = {
         test.done();
     },
     
-    isupper: function(test) {
+    testIsupper: function(test) {
         test.ok('UPPER'.isupper(), 'Can verify a simple uppercase string');
         test.ok('A B C D'.isupper(), 'Does not care about spaces');
         test.ok('A1B2C3D4'.isupper(), 'Does not care about digits');
@@ -201,7 +202,7 @@ exports.string = {
         test.done();
     },
     
-    join: function(test) {
+    testJoin: function(test) {
         var testList = ['first', 'second', 'third'];
         var testDict = {'one': 1, 'two': 2, 'three': 3};
     
@@ -219,7 +220,7 @@ exports.string = {
         test.done();
     },
     
-    ljust: function(test) {
+    testLjust: function(test) {
         test.strictEqual('justify me'.ljust(15), 'justify me     ', 'Can left justify a simple string');
         test.strictEqual('justify me'.ljust(15, '-'), 'justify me-----', 'Can left justify a simple string');
         test.strictEqual('justify me'.ljust(4), 'justify me', 'Returns the base string when width is less than base string length');
@@ -246,13 +247,13 @@ exports.string = {
         test.done();
     },
     
-    lower: function(test) {
+    testLower: function(test) {
         // No need for too much here since it's using String.toLowerCase under the hood
         test.strictEqual('UPPERCASE'.lower(), 'uppercase', 'Uses toLowerCase');
         test.done();
     },
     
-    lstrip: function(test) {
+    testLstrip: function(test) {
         test.strictEqual('   start here'.lstrip(), 'start here', 'Can remove spaces from the beginning of a simple string');
         test.strictEqual('\n\tstart here'.lstrip(), 'start here', 'Can remove tabs and newlines from the beginning of a simple string');
         test.strictEqual('   start here  '.lstrip(), 'start here  ', 'Does not remove spaces from the end of a simple string');
@@ -269,7 +270,7 @@ exports.string = {
         test.done();
     },
     
-    partition: function(test) {
+    testPartition: function(test) {
         test.deepEqual('first,second'.partition(','), ['first', ',', 'second'], 'Can partition a simple string on a simple separator');
         test.deepEqual('first---second'.partition('---'), ['first', '---', 'second'], 'Can partition a simple string on a multichar separator');
         test.deepEqual('first,second,third'.partition(','), ['first', ',', 'second,third'], 'Can partition a simple string with multiple instances of separator');
@@ -287,7 +288,7 @@ exports.string = {
         test.done();
     },
     
-    rfind: function(test) {
+    testRfind: function(test) {
         var findThis = "find something in this string";
         test.strictEqual(findThis.rfind('ing'), 26, 'Can correctly identify the rightmost index of a substring that is at the very end of the string');
         test.strictEqual(findThis.rfind('in'), 26, 'Can correctly identify the rightmost index of a substring that is not at the end of the string');
@@ -303,7 +304,7 @@ exports.string = {
         test.done();
     },
     
-    rindex: function(test) {
+    testRindex: function(test) {
         // it uses rfind under the hood, so we just need to test the -1 case
         test.throws(
             function() {
@@ -323,7 +324,7 @@ exports.string = {
         test.done();
     },
     
-    rjust: function(test) {
+    testRjust: function(test) {
         var justifyThis = "JUSTICE";
         test.strictEqual(justifyThis.rjust(10), '   JUSTICE', 'Can right justify a simple string');
         test.strictEqual(justifyThis.rjust(10, '-'), '---JUSTICE', 'Can right justify a simple string with specified fillchar');
@@ -351,7 +352,7 @@ exports.string = {
         test.done();
     },
     
-    rpartition: function(test) {
+    testRpartition: function(test) {
         test.deepEqual('first,second'.rpartition(','), ['first', ',', 'second'], 'Can partition a simple string on a simple separator');
         test.deepEqual('first---second'.rpartition('---'), ['first', '---', 'second'], 'Can partition a simple string on a multichar separator');
         test.deepEqual('first,second,third'.rpartition(','), ['first,second', ',', 'third'], 'Can partition a simple string with multiple instances of separator');
@@ -369,7 +370,7 @@ exports.string = {
         test.done();
     },
     
-    rstrip: function(test) {
+    testRstrip: function(test) {
         test.strictEqual('clean up    '.rstrip(), 'clean up', 'Can remove spaces from the end of a simple string');
         test.strictEqual('clean up\n\t'.rstrip(), 'clean up', 'Can remove tabs and newlines from the end of a simple string');
         test.strictEqual('   clean up   '.rstrip(), '   clean up', 'Does not remove spaces from the beginning of a simple string');
@@ -386,7 +387,7 @@ exports.string = {
         test.done();
     },
     
-    splitlines: function(test) {
+    testSplitlines: function(test) {
         test.deepEqual('two\nlines'.splitlines(), ['two', 'lines'], 'Can split on a simple newline character');
         test.deepEqual('two\nlines'.splitlines(true), ['two\n', 'lines'], 'Can keep the newlines intact');
         test.deepEqual('two\nlines\n'.splitlines(true), ['two\n', 'lines\n'], 'Can keep the newlines intact even when ending on a newline');
@@ -395,7 +396,7 @@ exports.string = {
         test.done();
     },
     
-    startswith: function(test) {
+    testStartswith: function(test) {
         var testStart = 'startswith';
     
         test.strictEqual(testStart.startswith('start'), true, 'Can see a simple case of starting with');
@@ -409,7 +410,7 @@ exports.string = {
         test.done();
     },
     
-    strip: function(test) {
+    testStrip: function(test) {
         // uses rstrip and lstrip internally, so just check that both work together
         test.strictEqual('   abc   '.strip(), 'abc', 'Can remove spaces from the start and end of a string');
         test.strictEqual('\n\tabc\n\t'.strip(), 'abc', 'Can remove tabs and newlines from the start and end of a string');
@@ -425,7 +426,7 @@ exports.string = {
         test.done();
     },
     
-    swapcase: function(test) {
+    testSwapcase: function(test) {
         test.strictEqual('abcd'.swapcase(), 'ABCD', 'Can swap the case of a simple lowercase string');
         test.strictEqual('ABCD'.swapcase(), 'abcd', 'Can swap the case of a simple uppercase string');
         test.strictEqual('AbcD'.swapcase(), 'aBCd', 'Can swap the case of a simple mixed-case string');
@@ -436,7 +437,7 @@ exports.string = {
         test.done();
     },
     
-    title: function(test) {
+    testTitle: function(test) {
         test.strictEqual('a simple titleable string'.title(), 'A Simple Titleable String', 'Can titlecase a simple lowercase string');
         test.strictEqual('A SIMPLE TITLEABLE STRING'.title(), 'A Simple Titleable String', 'Can titlecase a simple uppercase string');
         test.strictEqual('a String with some Titled words'.title(), 'A String With Some Titled Words', 'Can titlecase a string that alread contains title words');
@@ -448,7 +449,7 @@ exports.string = {
         test.done();
     },
     
-    zfill: function(test) {
+    testZfill: function(test) {
         // uses rjust internally, so just test that '0's are used
         test.strictEqual('1234'.zfill(10), '0000001234', 'Can fill correctly with 0s');
         test.done();
