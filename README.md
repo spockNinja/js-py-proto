@@ -49,12 +49,14 @@ String functions that have been implemented can be found here: http://docs.pytho
 
 #### Objects/Dicts
 Object/Dict functions that have been implemented can be found here: https://docs.python.org/2/library/stdtypes.html#mapping-types-dict
-
-*Notes*
 * `get` was aliased to `getValue` because `get` breaks some standard javascript Object features
 * `update` currently only takes another Object/Dict and does not accept an array of (key, val) pairs
 * `iter*` and `view*` functions have not yet been implemented because there is no euqivalent in javascript yet
 * Once Javascript 1.7 is widely supported, `iter*` functions will be useful and are on my radar
+
+#### Arrays
+Array functions that have been implemented can be found here: https://docs.python.org/2/tutorial/datastructures.html#more-on-lists
+* `pop` was aliased to `popItem` because native JS already implements `pop`, and the python allows for passing an item in to pop
 
 ****
 ### Contributing
