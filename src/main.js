@@ -36,6 +36,9 @@
                     case 'objects':
                         objToPatch = Object.prototype;
                         break;
+                    case 'arrays':
+                        objToPatch = Array.prototype;
+                        break;
                     default:
                         throw new Error("Module not yet implemented: " + m);
                 }
